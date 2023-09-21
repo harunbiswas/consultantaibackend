@@ -40,6 +40,7 @@ const loginHandler = async function (req, res, next) {
       if (isValidPass) {
         // jwt token
         const userObject = {
+          id: result._id,
           firstName: result.firstName,
           lastName: result.lastName,
           email: result.email,
@@ -49,18 +50,24 @@ const loginHandler = async function (req, res, next) {
           expiresIn: process.env.JWT_EXPIRY,
         });
 
-        res.status(200).json({ user: userObject, token });
+        userObject.token = token;
+
+        res.status(200).json({ user: userObject });
       } else {
         res.status(400).json({
           errors: {
-            msg: "Password incorrect",
+            password: {
+              msg: "Password incorrect",
+            },
           },
         });
       }
     } else {
       res.status(400).json({
         errors: {
-          msg: "user not found",
+          email: {
+            msg: "user not found",
+          },
         },
       });
     }
