@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node index",
-    "dev": "nodemon index"
+    "dev": " sudo service mongod start && nodemon index"
   },
   "dependencies": {
     "@inworld/nodejs-sdk": "^1.5.1",

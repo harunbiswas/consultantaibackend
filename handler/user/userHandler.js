@@ -76,7 +76,19 @@ const loginHandler = async function (req, res, next) {
   }
 };
 
+const googleLoginHandler = async function (req, res, next) {
+  const token = jwt.sign(req.body, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRY,
+  });
+
+  const userObject = req.body;
+  userObject.token = token;
+
+  res.status(200).json(userObject);
+};
+
 module.exports = {
   signupHandler,
+  googleLoginHandler,
   loginHandler,
 };

@@ -33,6 +33,26 @@ const addUserValidators = [
     }),
   check("password").isLength({ min: 4 }).withMessage("Less then 4 caractors"),
 ];
+const googleValidators = [
+  check("firstName")
+    .isLength({ min: 1 })
+    .withMessage("First name is required")
+    .isAlpha("en-US", { ignore: " -" })
+    .withMessage("Name must not contain anything other than alphabet")
+    .trim(),
+  check("lastName")
+    .isLength({ min: 1 })
+    .withMessage("First name is required")
+    .isAlpha("en-US", { ignore: " -" })
+    .withMessage("Name must not contain anything other than alphabet")
+    .trim(),
+  check("email")
+    .isLength({ min: 3 })
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Invalid email address")
+    .trim(),
+];
 const loginValidators = [
   check("email")
     .isLength({ min: 3 })
@@ -43,7 +63,7 @@ const loginValidators = [
   check("password").isLength({ min: 4 }).withMessage("Less then 4 caractors"),
 ];
 
-const addUserValidationHandler = function (req, res, next) {
+const validationHandler = function (req, res, next) {
   const errors = validationResult(req);
   const mapperErrors = errors.mapped();
 
@@ -57,5 +77,6 @@ const addUserValidationHandler = function (req, res, next) {
 module.exports = {
   addUserValidators,
   loginValidators,
-  addUserValidationHandler,
+  googleValidators,
+  validationHandler,
 };

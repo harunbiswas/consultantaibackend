@@ -1,16 +1,27 @@
 const express = require("express");
 const {
   addUserValidators,
-  addUserValidationHandler,
+  validationHandler,
   loginValidators,
+  googleValidators,
 } = require("../middlwares/users/userValidators");
-const { signupHandler, loginHandler } = require("../handler/user/userHandler");
+const {
+  signupHandler,
+  loginHandler,
+  googleLoginHandler,
+} = require("../handler/user/userHandler");
 const router = express.Router();
 
 // singup
-router.post("/", addUserValidators, addUserValidationHandler, signupHandler);
+router.post("/", addUserValidators, validationHandler, signupHandler);
 
 // login
-router.post("/login", loginValidators, addUserValidationHandler, loginHandler);
+router.post("/login", loginValidators, validationHandler, loginHandler);
+router.post(
+  "/google/login",
+  googleValidators,
+  validationHandler,
+  googleLoginHandler
+);
 
 module.exports = router;

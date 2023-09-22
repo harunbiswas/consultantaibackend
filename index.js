@@ -6,6 +6,7 @@ const elevenLabs = require("./app/elevenLabs");
 const { chatOpenAi } = require("./app/openAi");
 const database = require("./db/db");
 const userRouter = require("./router/users");
+const chatbotRouter = require("./router/chatbot");
 const {
   notFoundHandler,
   errorHandler,
@@ -33,9 +34,11 @@ app.get("", (req, res) => {
 });
 
 // routing setup
-app.use("/users", userRouter);
 app.post("", sayHello);
 app.post("/voice", elevenLabs);
+
+app.use("/users", userRouter);
+app.use("/chatbot", chatbotRouter);
 
 // 404 not found handler
 app.use(notFoundHandler);
