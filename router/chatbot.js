@@ -3,6 +3,8 @@ const authgurd = require("../middlwares/common/authGurd");
 const {
   addChatbot,
   getChatbots,
+  activeChatbot,
+  getActiveChatbot,
 } = require("../handler/chatbot/addChatbotHandler");
 const {
   addChatbotValidation,
@@ -12,6 +14,12 @@ const router = express.Router();
 
 // get Chatbots
 router.get("/", authgurd, getChatbots);
+
+// active chatbot
+router.put("/activechatbot", authgurd, activeChatbot);
+
+// get active chatbot
+router.get("/activechatbot", authgurd, getActiveChatbot);
 
 // add chatbot
 router.post(
