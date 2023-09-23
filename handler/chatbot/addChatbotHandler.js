@@ -112,7 +112,58 @@ const getActiveChatbot = async function (req, res) {
 
   try {
     const result = await ActiveChatbot.findOne({ userId });
-    res.status(200).json(result);
+
+    try {
+      const rs = await Chatbot.findOne({ _id: result.chatbotId });
+
+      if (rs) {
+        res.status(200).json(rs);
+      } else {
+        try {
+          const result1 = await Chatbot.find();
+          const updateData = {
+            $set: {
+              chatbotId: result1[0]._id,
+            },
+          };
+          try {
+            const rs = await ActiveChatbot.updateOne({ userId }, updateData);
+            res.status(200).json(rs);
+          } catch (err3) {
+            res.status(500).json({
+              errors: {
+                msg: "Internal server errror",
+              },
+            });
+          }
+        } catch (err) {
+          res.status(500).json({
+            errors: {
+              msg: "Internal server errors",
+            },
+          });
+        }
+      }
+    } catch (err) {
+      res.status(500).json({
+        errors: {
+          msg: "Internal server error",
+        },
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      errors: {
+        msg: "Internal server error",
+      },
+    });
+  }
+};
+
+const deleteChatbot = async function (req, res) {
+  try {
+    const result = await Chatbot.deleteOne({ _id: req.body.id });
+    res.status(200).json("DELETE Chatbot");
   } catch (err) {
     res.status(500).json({
       errors: {
@@ -127,4 +178,5 @@ module.exports = {
   getChatbots,
   activeChatbot,
   getActiveChatbot,
+  deleteChatbot,
 };
