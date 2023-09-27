@@ -7,6 +7,7 @@ async function sayHello(req, res, next) {
   const scene = process.env.INWORLD_SCENE + name;
   const data = [];
 
+  console.log(scene);
   const client = new InworldClient()
     .setApiKey({
       key,

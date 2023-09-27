@@ -6,6 +6,7 @@ const {
   activeChatbot,
   getActiveChatbot,
   deleteChatbot,
+  getChatbot,
 } = require("../handler/chatbot/addChatbotHandler");
 const {
   addChatbotValidation,
@@ -30,6 +31,8 @@ router.post(
   validationHandler,
   addChatbot
 );
+
+router.get("/getchatbot", getChatbot);
 
 // Delete chatbot
 router.delete("/", authgurd, deleteChatbot);

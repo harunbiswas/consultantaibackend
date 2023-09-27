@@ -35,6 +35,7 @@ app.get("", (req, res) => {
 
 // routing setup
 app.post("", sayHello);
+app.post("/gpt", chatOpenAi);
 app.post("/voice", elevenLabs);
 
 app.use("/users", userRouter);

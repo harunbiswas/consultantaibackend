@@ -1,8 +1,10 @@
 const { Configuration, OpenAIApi } = require("openai");
 const value = require("../data");
+const Chatbot = require("../models/Chatbot");
+const mongoose = require("mongoose");
 
 async function chatOpenAi(req, res, next) {
-  const { text, name } = req.body;
+  const { text } = req.body;
 
   const data = [];
 
@@ -11,27 +13,50 @@ async function chatOpenAi(req, res, next) {
     apiKey: key,
   });
   const openai = new OpenAIApi(configuration);
+  const { id } = req.query;
 
-  try {
-    const completion = await openai.createChatCompletion({
-      model: "gpt-4",
-      messages: [
-        { role: "assistant", content: text },
-        { role: "system", content: value[name] },
-      ],
-    });
+  const ObjectId = mongoose.Types.ObjectId;
 
-    // Process the completion response
+  function isValidObjectId(id) {
+    return mongoose.Types.ObjectId.isValid(id);
+  }
 
-    completion.data.choices.forEach((item) => {
-      data.push({ text: item.message.content });
-    });
+  if (isValidObjectId(id)) {
+    const objectId = new ObjectId(id);
+    try {
+      const result1 = await Chatbot.findOne({ _id: objectId });
 
-    res.status(200).json(data);
-  } catch (error) {
-    // Handle errors
-    console.error(error.response);
-    res.status(500).json("Internal server error");
+      try {
+        const completion = await openai.createChatCompletion({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "assistant", content: text },
+            {
+              role: "system",
+              content: `You are a helpful assistant named ${result1.agent}. ${result1.matarials}`,
+            },
+          ],
+        });
+
+        // Process the completion response
+
+        completion.data.choices.forEach((item) => {
+          data.push({ text: item.message.content });
+        });
+
+        res.status(200).json(data);
+      } catch (error) {
+        // Handle errors
+        // console.error(error.response);
+        res.status(500).json("Internal server errors");
+      }
+    } catch (error) {
+      // Handle errors
+      console.error(error);
+      res.status(500).json("Internal server error");
+    }
+  } else {
+    res.status(400).json("Invalid data");
   }
 }
 

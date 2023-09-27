@@ -1,5 +1,6 @@
 const ActiveChatbot = require("../../models/ActiveChatbot");
 const Chatbot = require("../../models/Chatbot");
+const mongoose = require("mongoose");
 
 const getChatbots = async function (req, res) {
   const userId = req.body.user.id;
@@ -120,7 +121,7 @@ const getActiveChatbot = async function (req, res) {
         res.status(200).json(rs);
       } else {
         try {
-          const result1 = await Chatbot.find();
+          const result1 = await Chatbot.find({ userId });
           const updateData = {
             $set: {
               chatbotId: result1[0]._id,
@@ -173,10 +174,32 @@ const deleteChatbot = async function (req, res) {
   }
 };
 
+const getChatbot = async function (req, res) {
+  const id = req.query;
+  const ObjectId = mongoose.Types.ObjectId;
+
+  function isValidObjectId(id) {
+    return mongoose.Types.ObjectId.isValid(id);
+  }
+
+  if (isValidObjectId(id)) {
+    const objectId = new ObjectId(id);
+    try {
+      const result = await Chatbot.findOne({ _id: objectId });
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json("Internal server errors");
+    }
+  } else {
+    res.status(400).json("Chatbot id invalid");
+  }
+};
+
 module.exports = {
   addChatbot,
   getChatbots,
   activeChatbot,
   getActiveChatbot,
   deleteChatbot,
+  getChatbot,
 };

@@ -22,6 +22,22 @@ const ChatbotSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    color: {
+      type: String,
+      default: "#6600ff",
+    },
+    img: {
+      type: String,
+      default:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxqdECkvvuQhUBmc6xsYJYEFTdc2jxiVFmDrbxaOKwpPhye-vH_vtEOC2T42GHLNeois8&usqp=CAU",
+    },
+    voice: {
+      type: String,
+      default: "female",
+    },
+    welcomeMsg: {
+      type: String,
+    },
   },
   {
     timestamps: true,
